@@ -1,0 +1,130 @@
+-- utworzenie tabeli Lekarze
+CREATE TABLE Lekarze (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  imię VARCHAR(30),
+  nazwisko VARCHAR(30),
+  specjalizacja VARCHAR(100),
+  telefon VARCHAR(20),
+  email VARCHAR(50)
+);
+-- utworzenie tabeli Pacjenci
+CREATE TABLE Pacjenci (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  imię VARCHAR(50),
+  gatunek VARCHAR(100),
+  płeć VARCHAR(20),
+  rasa VARCHAR(50),
+  wiek INTEGER,
+  waga FLOAT,
+  uwagi VARCHAR(255)
+);
+
+-- utworzenie tabeli Właściciele
+CREATE TABLE Właściciele (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  imię VARCHAR(50),
+  nazwisko VARCHAR(50),
+  adres VARCHAR(50),
+  telefon VARCHAR(20),
+  email VARCHAR(100)
+);
+
+-- utworzenie tabeli Historia chorób
+CREATE TABLE Historia_chorób (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  id_pacjenta INTEGER,
+  choroba VARCHAR(255),
+  przebieg_leczenia VARCHAR(255)
+);
+
+-- utworzenie tabeli Wizyty
+CREATE TABLE Wizyty (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  data_wizyty DATE,
+  id_pracownika INTEGER,
+  id_pacjenta INTEGER,
+  czas_trwania VARCHAR(20),
+  opis VARCHAR(255)
+);
+ALTER TABLE Wizyty
+ADD CONSTRAINT FK_Pacjenci
+	FOREIGN KEY (id_pacjenta)
+	REFERENCES Pacjenci(Id);
+
+ALTER TABLE Wizyty
+ADD CONSTRAINT  FK_Pracownicy
+FOREIGN KEY (id_pracownika)
+REFERENCES Pracownicy(id);
+
+-- utworzenie tabeli Pracownicy
+CREATE TABLE Pracownicy (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  imię_nazwisko VARCHAR(50),
+  stanowisko VARCHAR(50)
+);
+
+-- utworzenie tabeli Usługi
+CREATE TABLE Usługi (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  nazwa VARCHAR(100),
+  cena FLOAT
+);
+-- utworzenie tabeli Zabiegi
+CREATE TABLE Zabiegi (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  nazwa VARCHAR(100),
+  opis VARCHAR(255)
+);
+-- utworzenie tabeli Leki
+CREATE TABLE Leki (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  nazwa VARCHAR(100),
+  marka VARCHAR(100),
+  cena INTEGER,
+  jednostka_miary VARCHAR(30), -- np tabletka, fiolka
+  opis VARCHAR(200)
+);
+-- utworzenie tabeli Zamówienie leków
+CREATE TABLE Zamówienia_leków (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  id_leku INTEGER,
+  id_wizyty INTEGER,
+  ilość VARCHAR(20),
+  cena_łączna VARCHAR(20)
+);
+
+ALTER TABLE Zamówienia_leków
+ADD CONSTRAINT FK_Leki
+FOREIGN KEY (id_leku)
+REFERENCES Leki(id);
+
+ALTER TABLE Zamówienia_leków
+ADD CONSTRAINT FK_Wizyty_Leki
+FOREIGN KEY (id_wizyty)
+REFERENCES Wizyty(id);
+
+-- utworzenie tabeli Zalecenia
+CREATE TABLE Zalecenia (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  id_wizyty INTEGER,
+  opis VARCHAR(255),
+  FOREIGN KEY (id_wizyty) REFERENCES Wizyty(id)
+);
+-- utworzenie tabeli Zamówienia usług
+CREATE TABLE Zamówienia_usług (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_usługi INTEGER,
+    id_wizyty INTEGER
+);
+ALTER TABLE Zamówienia_usług
+ADD CONSTRAINT FK_Usługi
+	FOREIGN KEY (id_usługi)
+	REFERENCES Usługi(Id);
+
+ALTER TABLE Zamówienia_usług
+ADD CONSTRAINT FK_Wizyty
+	FOREIGN KEY (id_wizyty)
+	REFERENCES Wizyty(Id);
+
+SET FOREIGN_KEY_CHECKS=0;
+DROP TABLE Historia_chorób, Leki, Lekarze, Pacjenci, Pracownicy, Usługi,Wizyty,Właściciele,Zabiegi,Zalecenia,Zamówienia_leków,Zamówienia_usług;
